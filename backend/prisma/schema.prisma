@@ -1,0 +1,28 @@
+// prisma/schema.prisma
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String  @unique
+  password String
+  role     String
+  events   Event[]
+}
+
+model Event {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  date        DateTime
+  isApproved  Boolean  @default(false)
+  creator     User     @relation(fields: [creatorId], references: [id])
+  creatorId   String   @db.ObjectId
+}
