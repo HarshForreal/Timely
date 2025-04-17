@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 import eventRoutes from "./routes/event.routes.js"; // Ensure correct path
+import adminRoutes from './routes/admin.routes.js'; // ✅ Add .js at end in ESM
+
 
 dotenv.config();
 
@@ -15,6 +17,9 @@ app.use(express.json());
 
 // Route Setup
 app.use("/api/events", eventRoutes); // Use /api/events as the base for event routes
+
+app.use('/api/admin', adminRoutes);
+
 
 // DB Connection
 mongoose
