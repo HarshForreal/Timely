@@ -6,21 +6,29 @@ const prisma = new PrismaClient();
 export const createEvent = async (req, res) => {
   try {
     const { title, description, date } = req.body;
-    const userId = req.user.id;
+
+    // Ensure the user is authenticated
+    if (!req.user) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+
+    const userId = req.user.id; // Get user ID from authenticated user
+
     const newEvent = await prisma.event.create({
       data: {
         title,
         description,
-        date: new Date(date),
-        creatorId: userId,
+        date: new Date(date), // Ensure date is in correct format
+        creatorId: userId, // Set the logged-in user's ID as the creatorId
       },
     });
-    res.status(200).json(newEvent);
+
+    res.status(200).json(newEvent); // Respond with the created event
   } catch (error) {
+    console.error("Error creating event:", error);
     res.status(500).json({ error: "Failed to create event" });
   }
 };
-
 // Get User Events
 export const getUserEvents = async (req, res) => {
   try {
